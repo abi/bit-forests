@@ -1,22 +1,64 @@
 body{
 	background: #ffffff;
-  font-family: "Garamond";
+  font-family: "Optima";
 }
 
 
 #app{
 	width: 40%;
   float: left;
+
+  #input{
+    margin-top: 50px;
+    margin-left: 50px;
+  }
+
+  #matrix, #matrix-properties{
+    font-family:"Monaco";
+    color: #96D615;
+    margin-top: 50px;
+    margin-left: 50px;
+    width: 100%;
+  }
+
+  #matrix{
+    padding: 10px;
+    border: 2px solid #E61717;
+    border-radius: 2px;
+
+    span{
+      padding-right: 10px;
+    }
+    div{
+      padding-bottom: 10px;
+    }
+  }
+
+}
+
+#editor-box, #editor{
+  width: 58%;
+  height: 500px;
 }
 
 #editor-box{
-	width: 46%;
-	height: 500px;
   float: left;
 
+  #toolbar{
+    margin-bottom: 10px;
+    margin-top: 20px;
+
+    #save-ind{
+      padding: 5px 20px;
+      border: 1px solid black;
+      background: #EC4545;
+      color: white;
+      border-radius: 5px;
+      float: right;
+    }
+  }
+
   #editor{
-    width: 58%;
-    height: 500px;
     font-size: 11px;
   }
 

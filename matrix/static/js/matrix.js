@@ -4,15 +4,16 @@ $(document).ready(function(){
 
 function renderApp(){
 	$("#app").html("" +
-        "<textarea id='input' rows=\"20\" cols=\"20\"></textarea>" +
-        "<div id='matrix'><div>");
+        "<textarea id='input' rows=\"6\" cols=\"10\"></textarea>" +
+        "<div id='matrix'></div>" +
+        "<div id='matrix-props'></div>");
     
     $('#input').keyup(function(){
         var input = $('#input').val();
         var matrix = parseMatrix(input);
         
         $('#matrix').html(renderMatrix(matrix));
-        $('#matrix').append($(renderProperties(matrix)));
+        $('#matrix-props').html(renderProperties(matrix));
     });
     
 }
@@ -22,7 +23,7 @@ function renderMatrix(matrix){
     matrix.each(function(row, i){
         html += "<div>";
         row.each(function(el, j){
-            html += "<span>(" + i + "," + j + ") " + el + "</span>";
+            html += "<span>" + el + "</span>";
         });
        html += "</div>"; 
     });

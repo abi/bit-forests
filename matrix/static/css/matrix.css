@@ -1,0 +1,57 @@
+body {
+  background: #ffffff;
+  font-family: "Optima";
+}
+#app {
+  width: 40%;
+  float: left;
+}
+#app #input {
+  margin-top: 50px;
+  margin-left: 50px;
+}
+#app #matrix,
+#app #matrix-properties {
+  font-family: "Monaco";
+  color: #96D615;
+  margin-top: 50px;
+  margin-left: 50px;
+  width: 100%;
+}
+#app #matrix {
+  padding: 10px;
+  border: 2px solid #E61717;
+  border-radius: 2px;
+}
+#app #matrix span {
+  padding-right: 10px;
+}
+#app #matrix div {
+  padding-bottom: 10px;
+}
+#editor-box,
+#editor {
+  width: 58%;
+  height: 500px;
+}
+#editor-box {
+  float: left;
+}
+#editor-box #toolbar {
+  margin-bottom: 10px;
+  margin-top: 20px;
+}
+#editor-box #toolbar #save-ind {
+  padding: 5px 20px;
+  border: 1px solid black;
+  background: #EC4545;
+  color: white;
+  border-radius: 5px;
+  float: right;
+}
+#editor-box #editor {
+  font-size: 11px;
+}
+#editor-box div {
+  display: block;
+}
