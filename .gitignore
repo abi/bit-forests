@@ -1,4 +1,1 @@
-*.dSYM
-
-#Binaries
-bst
+.DS_Store

@@ -1,0 +1,19 @@
+{
+  "name": "matrix",
+  "version": "0.1.0",
+  "dependencies": {
+    "express" : "*",
+    "socket.io": "*"
+  },
+  "devDependencies": {
+    "coffee-script": "1.1.x"
+  },
+  "scripts": {
+    "test": "mocha",
+    "prepublish": "coffee -o lib -c src/*.coffee"
+  },
+  "contributors": [
+    "Abi Raja <abimanyuraja@gmail.com>"
+  ],
+  "private" : "true"
+}

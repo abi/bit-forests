@@ -1,0 +1,77 @@
+<html>
+<head>
+  <title>Matrix</title>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet/less" type="text/css" href="css/matrix.less" />
+  <style type="text/css" media="screen">
+    #editor { 
+/*        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;*/
+    }
+  </style>
+
+  <!-- JS Libs -->
+  <script type="text/javascript" src="js/lib/less-1.3.3.min.js"></script>
+  <script type="text/javascript" src="js/lib/jquery-1.9.0.js"></script>
+  <script src="http://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+  <script src="/socket.io/socket.io.js"></script>
+
+  <!-- JS -->
+  <script type="text/javascript" src="js/matrix.js"></script>
+</head>
+<body>
+
+  <div id="root">
+    <div id="app">
+    </div>
+    <div id="editor-box">
+      <div id="toolbar">
+        <input type="button" id='refresh-btn' value="Refresh" />
+        <input type="button" id='save-btn' value="Save" />
+      </div>
+      <div id="editor"></div>
+    </div>
+  </div>
+
+  <script>
+      var editor = ace.edit("editor");
+      window.gEditor = editor;
+      editor.setTheme("ace/theme/monokai");
+      editor.getSession().setMode("ace/mode/javascript");
+
+      var update = false;
+
+      //Live coding!
+      editor.getSession().on('change', function(e) {
+        if(!update){
+          try {
+            eval(editor.getValue());
+          } catch (e) {
+            console.log(e.lineNumber);
+          }
+        }
+      });
+      
+      // Sockets
+      var socket = io.connect('http://localhost');
+      socket.on('file', function (data) {
+        update = true;
+        editor.setValue(data.contents);
+        update = false;
+      });
+
+      $('#refresh-btn').click(function(){
+        socket.emit('refresh');
+      });
+
+      $('#save-btn').click(function(){
+        socket.emit('save', {'contents' : editor.getValue()});
+      });
+
+  </script>
+</body>
+</html>
