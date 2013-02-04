@@ -4,7 +4,7 @@ $(document).ready(function(){
 
 function renderApp(){
 	$("#app").html("" +
-        "<textarea id='input' rows=\"6\" cols=\"10\"></textarea>" +
+        "<div id='input-box'><textarea id='input' rows=\"6\" cols=\"10\"></textarea></div>" +
         "<div id='matrix'></div>" +
         "<div id='matrix-props'></div>");
     
@@ -53,6 +53,10 @@ function isIdentity(matrix){
         }
     });
     return success;
+}
+
+function isUpperTriangular(matrix){
+        
 }
 
 function renderProperties(matrix){
