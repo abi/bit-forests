@@ -16,6 +16,8 @@ function renderApp(){
         $('#matrix-props').html(renderProperties(matrix));
     });
     
+    $("#input").val(matrixToString(generateRandomMatrix()));
+    
 }
 
 function renderMatrix(matrix){
@@ -30,6 +32,31 @@ function renderMatrix(matrix){
     html += "</div>";
     console.log(html);
     return html;
+}
+
+var SIZE = 3;
+function generateRandomMatrix(){
+    var matrix = [];
+    for(var i = 0; i < SIZE; i++){
+        var row = [];
+        for(var j = 0; j < SIZE; j++){
+            row.push(Math.floor(Math.random() * 10));
+        }
+        matrix.push(row);
+    }
+    return matrix;
+}
+
+function matrixToString(matrix){
+    var str = "";
+    for(var i = 0; i < matrix.length; i++){
+        var row = matrix[i];
+        for(var j = 0; j < row.length; j++){
+            str += row[j] + " ";
+        }
+        str += "\n";
+    }
+    return str;
 }
 
 // Iterates through rows, and then each row's columns
