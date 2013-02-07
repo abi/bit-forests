@@ -16,7 +16,7 @@ function renderApp(){
         $('#matrix-props').html(renderProperties(matrix));
     });
     
-    $("#input").val(matrixToString(generateRandomMatrix()));
+    $("#input").val(matrixToString(zeroes()));
     
 }
 
@@ -32,6 +32,18 @@ function renderMatrix(matrix){
     html += "</div>";
     console.log(html);
     return html;
+}
+
+function zeroes(){
+    var matrix = [];
+    for(var i = 0; i < SIZE; i++){
+        var row = [];
+        for(var j = 0; j < SIZE; j++){
+            row.push(0);
+        }
+        matrix.push(row);
+    }
+    return matrix;
 }
 
 var SIZE = 3;
@@ -120,10 +132,6 @@ function getCols(matrix){
     }
     console.log(cols);
     return cols;
-}
-
-function tranpose(vector){
-    // Don't need this for now       
 }
 
 function dot(v1, v2){
