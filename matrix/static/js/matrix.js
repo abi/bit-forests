@@ -4,8 +4,9 @@ $(document).ready(function(){
 
 function renderApp(){
 	$("#app").html("" +
-        "<a href='javascript:void(0)' id='zeroes-btn'>Zeroes</a>" +
-        "<a href='javascript:void(0)' id='random-btn'>Random 3x3</a>" +
+        "<a href='javascript:void(0)' id='identity-btn'>3x3 Identity</a>" +
+        "<a href='javascript:void(0)' id='zeroes-btn'>3x3 Zeroes</a>" +
+        "<a href='javascript:void(0)' id='random-btn'>3x3 Random</a>" +
         "<div id='input-box'><textarea id='input' rows=\"6\" cols=\"10\"></textarea></div>" +
         "<div id='matrix'></div>" +
         "<div id='matrix-props'></div>");
@@ -20,6 +21,10 @@ function renderApp(){
     
     $("#input").val(matrixToString(zeroes()));
     $('#input').trigger("keyup");
+    
+    $('#identity-btn').click(function(){
+        updateInput(identity(3)); 
+    });
     
     $('#zeroes-btn').click(function(){
         updateInput(zeroes()); 
@@ -49,8 +54,20 @@ function renderMatrix(matrix){
     return html;
 }
 
-function identity(){
-    
+function identity(size){
+    var matrix = [];
+    for(var i = 0; i < size; i++){
+        var row = [];
+        for(var j = 0; j < size; j++){
+            if(i == j){
+                row.push(1);
+            }else{
+                row.push(0);
+            }
+        }
+        matrix.push(row);
+    }
+    return matrix;
 }
 
 function zeroes(){
