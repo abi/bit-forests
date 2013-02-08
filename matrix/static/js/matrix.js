@@ -4,6 +4,8 @@ $(document).ready(function(){
 
 function renderApp(){
 	$("#app").html("" +
+        "<a href='javascript:void(0)' id='zeroes-btn'>Zeroes</a>" +
+        "<a href='javascript:void(0)' id='random-btn'>Random 3x3</a>" +
         "<div id='input-box'><textarea id='input' rows=\"6\" cols=\"10\"></textarea></div>" +
         "<div id='matrix'></div>" +
         "<div id='matrix-props'></div>");
@@ -17,7 +19,20 @@ function renderApp(){
     });
     
     $("#input").val(matrixToString(zeroes()));
+    $('#input').trigger("keyup");
     
+    $('#zeroes-btn').click(function(){
+        updateInput(zeroes()); 
+    });
+    
+    $('#random-btn').click(function(){
+        updateInput(generateRandomMatrix());
+    });
+    
+    function updateInput(matrix){
+        $("#input").val(matrixToString(matrix));
+        $("#input").focus();
+    }
 }
 
 function renderMatrix(matrix){
@@ -32,6 +47,10 @@ function renderMatrix(matrix){
     html += "</div>";
     console.log(html);
     return html;
+}
+
+function identity(){
+    
 }
 
 function zeroes(){
@@ -168,6 +187,9 @@ function renderProperties(matrix){
 function parseMatrix(input){
     var matrix = [];
     input.split('\n').each(function(line){
+        line = line.compact();
+        // Ignore any empty new lines
+        if(line.length == 0) return;
         var row = [];
         line.split(' ').each(function(el){
             // Allow real numbers (and even complex numbers?)
