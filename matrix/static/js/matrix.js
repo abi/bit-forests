@@ -4,9 +4,11 @@ $(document).ready(function(){
 
 function renderApp(){
 	$("#app").html("" +
-        "<a href='javascript:void(0)' id='identity-btn'>3x3 Identity</a>" +
-        "<a href='javascript:void(0)' id='zeroes-btn'>3x3 Zeroes</a>" +
-        "<a href='javascript:void(0)' id='random-btn'>3x3 Random</a>" +
+		"<div id='toolbar'>" +
+        "<a href='javascript:void(0)' id='identity-btn' class='btn'>3x3 Identity</a>" +
+        "<a href='javascript:void(0)' id='zeroes-btn' class='btn'>3x3 Zeroes</a>" +
+        "<a href='javascript:void(0)' id='random-btn' class='btn'>3x3 Random</a>" +
+        "</div>" +
         "<div id='input-box'><textarea id='input' rows=\"6\" cols=\"10\"></textarea></div>" +
         "<div id='matrix'></div>" +
         "<div id='matrix-props'></div>");
@@ -185,18 +187,24 @@ function dot(v1, v2){
 }
 
 function renderProperties(matrix){
-    var html = "<div>"; 
+    var html = "<div>";
+
+    html += "<div>";
     if(isIdentity(matrix)){
         html += "Identity";
     }else{
         html += "Not identity";
     }
+    html += "</div>";
     
+    html += "<div>";
     if(isOrthogonal(matrix)){
         html += "Orthogonal";
     }else{
         html += "Not orthogonal";
     }
+    html += "</div>";
+
     html += "</div>";
     return html;
 }

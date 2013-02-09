@@ -3,6 +3,10 @@ body{
   font-family: "Optima";
 }
 
+a{
+  text-decoration: none;
+  color: black;
+}
 
 #app{
 	width: 40%;
@@ -13,11 +17,18 @@ body{
     margin-left: 50px;
   }
 
-  #matrix, #matrix-properties{
+  #matrix, #matrix-props{
     font-family:"Monaco";
     color: #96D615;
     margin-top: 50px;
     margin-left: 50px;
+  }
+
+  #matrix-props{
+    div{
+      margin-bottom: 10px;
+      color: black;
+    }
   }
 
   #matrix{
@@ -34,6 +45,29 @@ body{
     }
   }
 
+}
+
+#toolbar{
+  margin-top: 20px;
+}
+
+.btn{
+  padding: 10px;
+  border: 1px solid black;
+  margin-right: 20px;
+
+  &:hover{
+    background: black;
+    color: white;
+
+    transition-property: background, color;
+    transition-duration: 0.5s;
+    transition-timing-function: ease-out;
+  }
+
+  &:active{
+    background: grey;
+  }
 }
 
 #editor-box, #editor{
