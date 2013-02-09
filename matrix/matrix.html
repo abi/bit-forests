@@ -6,7 +6,7 @@
   <link rel="stylesheet/less" type="text/css" href="css/matrix.less" />
   <!-- When we use LiveReload -->
   <link rel="stylesheet" type="text/css" href="css/matrix.css" />
-  
+
   <style type="text/css" media="screen">
     #editor { 
 /*        position: absolute;
@@ -36,6 +36,7 @@
       <div id="toolbar">
         <input type="button" id='refresh-btn' value="Refresh" />
         <input type="button" id='save-btn' value="Save" />
+        <span id='error-ind'>COMPILE ERROR</span>
         <span id='save-ind'>UNSAVED</span>
       </div>
       <div id="editor"></div>
@@ -50,23 +51,31 @@
 
       var update = false;
       var lastSaved = "";
-
+      function updateErrorIndicator(error){
+        if(!error){
+          $('#error-ind').addClass('success').html('Success');
+        }else{
+          $('#error-ind').removeClass('success').html('Failure');
+        }
+      }
       //Live coding!
       editor.getSession().on('change', function(e) {
         var curText = editor.getValue();
         if(!update){
           try {
             eval(curText);
+            updateErrorIndicator(false);
           } catch (e) {
-            //console.log(e.lineNumber);
-            //TODO: Update the compilation status
+            updateErrorIndicator(true);
           }
         }
 
-        if(lastSaved != curText){
+        if(lastSaved !== curText){
           $('#save-ind').show();
         }
       });
+
+      updateErrorIndicator(false);
 
       // Sockets
       var socket = io.connect('http://localhost');
