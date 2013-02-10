@@ -1,10 +1,10 @@
 $(document).ready(function(){
-	renderApp();
+    renderApp();
 });
 
 function renderApp(){
-	$("#app").html("" +
-		"<div id='toolbar'>" +
+    $("#app").html("" +
+        "<div id='toolbar'>" +
         "<a href='javascript:void(0)' id='identity-btn' class='btn'>3x3 Identity</a>" +
         "<a href='javascript:void(0)' id='zeroes-btn' class='btn'>3x3 Zeroes</a>" +
         "<a href='javascript:void(0)' id='random-btn' class='btn'>3x3 Random</a>" +
@@ -135,6 +135,17 @@ function isUpperTriangular(matrix){
         
 }
 
+function isSymmetric(matrix){
+    for(var i = 0; i < matrix.length; i++){
+        for(var j = 0; j < matrix[0].length; j++){
+            if(matrix[i][j] !== matrix[j][i]){
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 function isOrthogonal(matrix){
     // Check that every row is orthogonal to every other row
     for(var i = 0; i < matrix.length; i++){
@@ -204,6 +215,19 @@ function renderProperties(matrix){
         html += "Not orthogonal";
     }
     html += "</div>";
+
+    function displayMessage(prop, value, html){
+        html += "<div>";
+        if(value){
+            html += prop;
+        }else{
+            html += "Not " + prop;
+        }
+        html += "</div>";
+        return html;
+    }
+
+    html = displayMessage("Symmetric", isSymmetric(matrix), html);
 
     html += "</div>";
     return html;
