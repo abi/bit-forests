@@ -197,6 +197,59 @@ function dot(v1, v2){
     return sum;
 }
 
+function Matrix(rows, cols){
+    this.rows = rows;
+    this.cols = cols;
+
+    // Square matrices
+    if(typeof cols == "undefined")
+        this.cols = rows;
+
+    // Initialize matrix to zeroes
+    this._storage = [];
+    for(var i = 0; i < rows; i++){
+        var row = [];
+        for(var j = 0; j < cols; j++){
+            row.push(0);
+        }
+        this._storage.push(row);
+    }
+}
+
+Matrix.prototype = {
+    setSize: function(rows, cols){
+        // TODO: Truncate existing arrays or add zeroes as necessary
+    },
+    at: function(i, j){
+        return this._storage[i][j];
+    },
+    set: function(i, j, val){
+        this._storage[i][j] = val;
+    },
+    // TODO: Overload or not to set and get element wise?
+    setElementWise: function(fn){
+        for(var i = 0; i < this.rows; i++){
+            for(var j = 0; j < this.cols; j++){
+                var val = fn(i, j);
+                this.set(i, j, val);
+            }
+        }
+    }
+}
+
+
+function generateIdentity(size){
+    var matrix = new Matrix(size);
+    matrix.setElementWise(function(i, j){
+        if(i == j)
+            return 1;
+        else
+            return 0;
+        // else return 0
+    });
+    return matrix;
+}
+
 function renderProperties(matrix){
     var html = "<div>";
 
