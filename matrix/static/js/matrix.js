@@ -25,7 +25,7 @@ function renderApp(){
     $('#input').trigger("keyup");
     
     $('#identity-btn').click(function(){
-        updateInput(identity(3)); 
+        updateInput(generateIdentity(3)); 
     });
     
     $('#zeroes-btn').click(function(){
@@ -37,8 +37,16 @@ function renderApp(){
     });
     
     function updateInput(matrix){
-        $("#input").val(matrixToString(matrix));
+        if(matrix instanceof Matrix){
+            $("#input").val(matrix.toString());
+            // renderer = new HtmlRenderer(matrix);
+            // $("#input").renderer.html();
+        }else{
+            $("#input").val(matrixToString(matrix));
+        }
+
         $("#input").focus();
+        $("#input").trigger("keyup");
     }
 }
 
@@ -52,7 +60,6 @@ function renderMatrix(matrix){
        html += "</div>"; 
     });
     html += "</div>";
-    console.log(html);
     return html;
 }
 
@@ -129,10 +136,6 @@ function isIdentity(matrix){
         }
     });
     return success;
-}
-
-function isUpperTriangular(matrix){
-        
 }
 
 function isSymmetric(matrix){
@@ -234,40 +237,51 @@ Matrix.prototype = {
                 this.set(i, j, val);
             }
         }
+        return this;
+    },
+    toString: function(){
+        var str = "";
+        for(var i = 0; i < this._storage.length; i++){
+            var row = this._storage[i];
+            for(var j = 0; j < row.length; j++){
+                str += row[j] + " ";
+            }
+            str += "\n";
+        }
+        return str;
+    }
+}
+
+function HtmlRenderer(matrix){
+    var html = "<div>"; 
+    // TODO: Design better API
+    matrix._storage.each(function(row, i){
+        html += "<div>";
+        row.each(function(el, j){
+            html += "<span>" + el + "</span>";
+        });
+       html += "</div>"; 
+    });
+    html += "</div>";
+    this._html = html;
+}
+
+HtmlRenderer.prototype = {
+    html: function(){
+        return this._html;
     }
 }
 
 
 function generateIdentity(size){
-    var matrix = new Matrix(size);
-    matrix.setElementWise(function(i, j){
-        if(i == j)
-            return 1;
-        else
-            return 0;
-        // else return 0
+    return (new Matrix(size)).setElementWise(function(i, j){
+        if(i == j){ return 1; }
+        else{ return 0; }
     });
-    return matrix;
 }
 
 function renderProperties(matrix){
     var html = "<div>";
-
-    html += "<div>";
-    if(isIdentity(matrix)){
-        html += "Identity";
-    }else{
-        html += "Not identity";
-    }
-    html += "</div>";
-    
-    html += "<div>";
-    if(isOrthogonal(matrix)){
-        html += "Orthogonal";
-    }else{
-        html += "Not orthogonal";
-    }
-    html += "</div>";
 
     function displayMessage(prop, value, html){
         html += "<div>";
@@ -280,6 +294,8 @@ function renderProperties(matrix){
         return html;
     }
 
+    html = displayMessage("Identity", isIdentity(matrix), html);
+    html = displayMessage("Orthogonal", isOrthogonal(matrix), html);
     html = displayMessage("Symmetric", isSymmetric(matrix), html);
 
     html += "</div>";
