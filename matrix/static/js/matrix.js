@@ -21,30 +21,26 @@ function renderApp(){
         $('#matrix-props').html(renderProperties(matrix));
     });
     
-    $("#input").val(matrixToString(zeroes()));
-    $('#input').trigger("keyup");
+    var matrixGen = new MatrixGenerator(3);
+
+    updateInput(matrixGen.zeroes());
     
     $('#identity-btn').click(function(){
-        updateInput(generateIdentity(3)); 
+        updateInput(matrixGen.identity()); 
     });
     
     $('#zeroes-btn').click(function(){
-        updateInput(zeroes()); 
+        updateInput(matrixGen.zeroes()); 
     });
     
     $('#random-btn').click(function(){
-        updateInput(generateRandomMatrix());
+        updateInput(matrixGen.random(40));
     });
     
     function updateInput(matrix){
-        if(matrix instanceof Matrix){
-            $("#input").val(matrix.toString());
-            // renderer = new HtmlRenderer(matrix);
-            // $("#input").renderer.html();
-        }else{
-            $("#input").val(matrixToString(matrix));
-        }
-
+        $("#input").val(matrix.toString());
+        // renderer = new HtmlRenderer(matrix);
+        // $("#input").renderer.html();
         $("#input").focus();
         $("#input").trigger("keyup");
     }
@@ -61,59 +57,6 @@ function renderMatrix(matrix){
     });
     html += "</div>";
     return html;
-}
-
-function identity(size){
-    var matrix = [];
-    for(var i = 0; i < size; i++){
-        var row = [];
-        for(var j = 0; j < size; j++){
-            if(i == j){
-                row.push(1);
-            }else{
-                row.push(0);
-            }
-        }
-        matrix.push(row);
-    }
-    return matrix;
-}
-
-function zeroes(){
-    var matrix = [];
-    for(var i = 0; i < SIZE; i++){
-        var row = [];
-        for(var j = 0; j < SIZE; j++){
-            row.push(0);
-        }
-        matrix.push(row);
-    }
-    return matrix;
-}
-
-var SIZE = 3;
-function generateRandomMatrix(){
-    var matrix = [];
-    for(var i = 0; i < SIZE; i++){
-        var row = [];
-        for(var j = 0; j < SIZE; j++){
-            row.push(Math.floor(Math.random() * 10));
-        }
-        matrix.push(row);
-    }
-    return matrix;
-}
-
-function matrixToString(matrix){
-    var str = "";
-    for(var i = 0; i < matrix.length; i++){
-        var row = matrix[i];
-        for(var j = 0; j < row.length; j++){
-            str += row[j] + " ";
-        }
-        str += "\n";
-    }
-    return str;
 }
 
 // Iterates through rows, and then each row's columns
@@ -182,7 +125,6 @@ function getCols(matrix){
         }
         cols.push(col);
     }
-    console.log(cols);
     return cols;
 }
 
@@ -227,6 +169,7 @@ Matrix.prototype = {
         return this._storage[i][j];
     },
     set: function(i, j, val){
+        // TODO: Check bounds
         this._storage[i][j] = val;
     },
     // TODO: Overload or not to set and get element wise?
@@ -252,6 +195,31 @@ Matrix.prototype = {
     }
 }
 
+// TODO: Copy the matrices and return a new instance of the matrix
+function MatrixGenerator(size){
+    this._size = size;
+    this._matrix = new Matrix(size);
+}
+
+MatrixGenerator.prototype = {
+    identity: function(){
+        return this._matrix.setElementWise(function(i, j){
+            if(i == j){ return 1; }
+            else{ return 0; }
+        });
+    },
+    zeroes: function(){
+        return this._matrix.setElementWise(function(){
+            return 0;
+        });
+    },
+    random: function(rangeEnd){
+        return this._matrix.setElementWise(function() {
+            return Math.floor(Math.random() * rangeEnd);
+        });
+    }
+}
+
 function HtmlRenderer(matrix){
     var html = "<div>"; 
     // TODO: Design better API
@@ -270,14 +238,6 @@ HtmlRenderer.prototype = {
     html: function(){
         return this._html;
     }
-}
-
-
-function generateIdentity(size){
-    return (new Matrix(size)).setElementWise(function(i, j){
-        if(i == j){ return 1; }
-        else{ return 0; }
-    });
 }
 
 function renderProperties(matrix){
