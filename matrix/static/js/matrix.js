@@ -59,14 +59,6 @@ function renderMatrix(matrix){
     return html;
 }
 
-// Iterates through rows, and then each row's columns
-function iterateElements(matrix, fn){
-    matrix.each(function(row, i){
-        row.each(function(el, j){
-            fn(el, i, j);
-        });
-    });
-}
 
 function isIdentity(matrix){
     var success = true;
@@ -79,17 +71,6 @@ function isIdentity(matrix){
         }
     });
     return success;
-}
-
-function isSymmetric(matrix){
-    for(var i = 0; i < matrix.length; i++){
-        for(var j = 0; j < matrix[0].length; j++){
-            if(matrix[i][j] !== matrix[j][i]){
-                return false;
-            }
-        }
-    }
-    return true;
 }
 
 function isOrthogonal(matrix){
@@ -171,6 +152,35 @@ Matrix.prototype = {
     set: function(i, j, val){
         // TODO: Check bounds
         this._storage[i][j] = val;
+    },
+    // Properties 
+    isSymmetric: function(){
+        var isSymmetric = true;
+        getElementWise(function(i, j, el){
+            if(el !== this._storage[i][j]){
+                isSymmetric = false;
+            }
+        });
+        return isSymmetric;
+    },
+    isIdentity: function(){
+        var success = true;
+        getElementWise(matrix, function(i, j, el){
+            if (i === j && el !== 1){
+                success = false;
+            }
+            if (i !== j && el !== 0){
+                success = false;
+            }
+        });
+        return success;
+    },
+    getElementWise: function(fn){
+        for(var i = 0; i < this.rows; i++){
+            for(var j = 0; j < this.cols; j++){
+                fn(i, j, this._storage[i][j]);
+            }
+        }
     },
     // TODO: Overload or not to set and get element wise?
     setElementWise: function(fn){
