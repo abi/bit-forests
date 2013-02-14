@@ -10,6 +10,7 @@ function renderApp(){
         "<a href='javascript:void(0)' id='random-btn' class='btn'>3x3 Random</a>" +
         "</div>" +
         "<div id='input-box'><textarea id='input' rows=\"6\" cols=\"10\"></textarea></div>" +
+
         "<div id='matrix'></div>" +
         "<div id='matrix-props'></div>");
     
@@ -41,72 +42,23 @@ function renderApp(){
     function updateInput(matrix){
         $("#input").val(matrix.toString());
 
-        $("#input").focus();
+        //$("#input").focus();
         $("#input").trigger("keyup");
     }
 }
 
-function renderMatrix(matrix){
-    var html = "<div>"; 
-    matrix.each(function(row, i){
-        html += "<div>";
-        row.each(function(el, j){
-            html += "<span>" + el + "</span>";
-        });
-       html += "</div>"; 
-    });
-    html += "</div>";
-    return html;
-}
-
-function isOrthogonal(matrix){
-    // Check that every row is orthogonal to every other row
-    for(var i = 0; i < matrix.length; i++){
-        // TODO: Out of bounds
-        for(var j = i + 1; j < matrix.length; j++){
-            if(dot(matrix[i], matrix[j]) != 0){
-                return false;
-            }
+var Utils = {
+    dot: function(v1, v2){
+        if(v1.length !== v2.length){
+            return;
         }
-    }
-    
-    var cols = getCols(matrix);
-    for(var i = 0; i < cols.length; i++){
-        // TODO: Out of bounds
-        for(var j = i + 1; j < cols.length; j++){
-            if(dot(cols[i], cols[j]) != 0){
-                return false;
-            }
+        
+        var sum = 0;
+        for(var i = 0; i < v1.length; i++){
+            sum += v1[i] * v2[i];
         }
+        return sum;
     }
-    return true;
-}
-
-function getCols(matrix){
-    // TODO: Bounds checking
-    var cols = [];
-    for(var j = 0; j < matrix[0].length; j++){
-        var col = [];
-        for(var i = 0; i < matrix.length; i++){
-            col.push(matrix[i][j]);
-        }
-        cols.push(col);
-    }
-    return cols;
-}
-
-function dot(v1, v2){
-    if(v1.length != v2.length){
-        //alert("BAD BAD BAD!");
-        // TODO: Return a bad a value or throw an exception
-        return;
-    }
-    
-    var sum = 0;
-    for(var i = 0; i < v1.length; i++){
-        sum += v1[i] * v2[i];
-    }
-    return sum;
 }
 
 function Matrix(rows, cols){
@@ -148,6 +100,9 @@ Matrix.prototype = {
         // TODO: Check bounds
         this._storage[i][j] = val;
     },
+    determinant: function(){
+        // TODO: Using the general formula
+    },
     // Properties 
     isSymmetric: function(){
         var isSymmetric = true;
@@ -168,6 +123,43 @@ Matrix.prototype = {
                 isIdentity = false;
         });
         return isIdentity;
+    },
+    isOrthogonal: function(){
+
+        // Check that every row is orthogonal to every other row
+        var rows = this.getRows();
+        for(var i = 0; i < rows.length; i++){
+            // TODO: Out of bounds
+            for(var j = i + 1; j < rows.length; j++){
+                if(Utils.dot(rows[i], rows[j]) != 0){
+                    return false;
+                }
+            }
+        }
+    
+        var cols = this.getCols();
+        for(var i = 0; i < cols.length; i++){
+            for(var j = i + 1; j < cols.length; j++){
+                if(Utils.dot(cols[i], cols[j]) != 0){
+                    return false;
+                }
+            }
+        }
+        return true;
+    },
+    getCols: function(){
+        var cols = [];
+        for(var j = 0; j < this._storage[0].length; j++){
+            var col = [];
+            for(var i = 0; i < this._storage.length; i++){
+                col.push(this._storage[i][j]);
+            }
+            cols.push(col);
+        }
+        return cols;
+    },
+    getRows: function(){
+        return this._storage;
     },
     getElementWise: function(fn){
         for(var i = 0; i < this.rows; i++){
@@ -197,6 +189,9 @@ Matrix.prototype = {
             str += "\n";
         }
         return str;
+    },
+    dot: function(){
+
     }
 }
 
@@ -282,7 +277,7 @@ function renderProperties(matrix){
     }
 
     html = displayMessage("Identity", matrix.isIdentity(), html);
-//    html = displayMessage("Orthogonal", isOrthogonal(matrix), html);
+    html = displayMessage("Orthogonal", matrix.isOrthogonal(), html);
     html = displayMessage("Symmetric", matrix.isSymmetric(), html);
 
     html += "</div>";
