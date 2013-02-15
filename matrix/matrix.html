@@ -32,6 +32,7 @@
   <div id="root">
     <div id="app">
     </div>
+    <input type="button" id='editor-btn' value='Hide Editor' />
     <div id="editor-box">
       <div id="toolbar">
         <input type="button" id='refresh-btn' value="Refresh" />
@@ -58,6 +59,8 @@
           $('#error-ind').removeClass('success').html('Failure');
         }
       }
+
+
       //Live coding!
       editor.getSession().on('change', function(e) {
         var curText = editor.getValue();
@@ -84,6 +87,16 @@
         editor.setValue(data.contents);
         // TODO: Prevent selection, empty selection, keep selection at previous point, if possible.
         update = false;
+      });
+
+      // Editor controls
+      $('#editor-btn').click(function(){
+        $('#editor-box').toggle();
+        if($('#editor-box').is(":visible")){
+          $(this).val('Hide editor');
+        }else{
+          $(this).val('Show editor');
+        }
       });
 
       $('#refresh-btn').click(function(){
