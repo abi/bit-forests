@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "dependencies": {
     "express" : "*",
-    "uglify-js" : "*"
+    "uglify-js" : "*",
+    "burrito": "*",
+    "socket.io": "*"
   },
   "devDependencies": {
     "coffee-script": "1.1.x"
