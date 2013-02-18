@@ -1,10 +1,10 @@
 var a = 4;
-a = 5;
+a = 6;
 a += 2;
 a = (function(){ return 8; })()
 
 var b = 2;
-var c = 0;
+var c = 1;
 var str = "";
 for(var i = 1; i <= 5; i++){
 	b = (b * 2);
