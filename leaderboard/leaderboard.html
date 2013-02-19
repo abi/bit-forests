@@ -9,6 +9,8 @@
 </body>
 
 <template name="leaderboard">
+  <input type="button" class="sort" value="Sort by name" />
+  <input type="button" class="reset" value="Randomize" />
   <div class="leaderboard">
     {{#each players}}
       {{> player}}
