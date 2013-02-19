@@ -12,6 +12,10 @@ if (Meteor.isClient) {
     }
   };
 
+  Template.leaderboard.desc = function() {
+    return Session.equals("sort_name", true) ? "points" : "name";
+  };
+
   Template.leaderboard.selected_name = function () {
     var player = Players.findOne(Session.get("selected_player"));
     return player && player.name;
