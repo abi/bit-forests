@@ -1,3 +1,16 @@
+var global = {
+    'original': Array.prototype.push
+};
+
+Array.prototype.push=(function(){
+    var original = Array.prototype.push;
+    return function() {
+        trace('arr', arguments, 11);
+        //console.log(arguments);
+        return original.apply(this,arguments);
+    };
+})();
+
 $(document).ready(function(){
     var socket = io.connect('http://localhost');
     socket.on('update', function (data) {
@@ -13,7 +26,7 @@ var traces = {};
 function trace(name, value, line){
     line = parseInt(line);
     if(!Object.has(traces, line)) traces[line] = [];
-    traces[line].push({'name' : name, 'value' : value, 'line' : line});
+    global['original'].apply(traces[line], [{'name' : name, 'value' : value, 'line' : line}]);
 }
 
 function renderTrace(){
