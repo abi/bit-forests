@@ -1,15 +1,15 @@
-var global = {
-    'original': Array.prototype.push
-};
+// var global = {
+//     'original': Array.prototype.push
+// };
 
-Array.prototype.push=(function(){
-    var original = Array.prototype.push;
-    return function() {
-        trace('arr', arguments, 11);
-        //console.log(arguments);
-        return original.apply(this,arguments);
-    };
-})();
+// Array.prototype.push=(function(){
+//     var original = Array.prototype.push;
+//     return function() {
+//         trace('arr', arguments, 11);
+//         //console.log(arguments);
+//         return original.apply(this,arguments);
+//     };
+// })();
 
 $(document).ready(function(){
     var socket = io.connect('http://localhost');
@@ -23,10 +23,15 @@ $(document).ready(function(){
 
 
 var traces = {};
-function trace(name, value, line){
+
+//  type, name, line, method, args, val_before, val_after
+function trace(name, value, line, method, args){
     line = parseInt(line);
     if(!Object.has(traces, line)) traces[line] = [];
-    global['original'].apply(traces[line], [{'name' : name, 'value' : value, 'line' : line}]);
+    
+    // console.log((function(value){return value;})(value));
+    // Temp hack value.toString() in order to get the current value
+    traces[line].push({'name' : name, 'value' : value.toString(), 'line' : line});
 }
 
 function renderTrace(){
