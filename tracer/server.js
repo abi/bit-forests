@@ -17,8 +17,9 @@ app.get('/', function(req, res){
 
 function transform(original){
     var src = burrito(original, function (node) {
-        if (node.name === 'assign'){        
-          node.wrap("{%s; trace('" + node.value[1][1] + "', " + node.value[1][1] + ", " +
+        if (node.name === 'assign'){
+          console.log(node);
+          node.wrap("{%s; trace('" + node.start['value'] + "', " + node.start['value'] + ", " +
                       node.start['line'] + ", 'assignment', [])}");
             //console.log(node.start);
         } else if(node.name == 'call' && node.start['type'] === 'name' && node.value[0].length > 2){
