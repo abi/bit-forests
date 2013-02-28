@@ -33,4 +33,4 @@ function insertionSort(items) {
     return items;
 }
 
-insertionSort([3, 2, 5, 1]);
+insertionSort([5, 3, 2, 1]);
