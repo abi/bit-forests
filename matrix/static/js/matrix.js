@@ -147,6 +147,14 @@ Matrix.prototype = {
         }
         return true;
     },
+    isUpperTriangular: function(){
+        var isUT = true;
+        this.getElementWise(function(i, j, el){
+            if (i > j && el !== 0)
+                isUT = false;
+        });
+        return isUT;
+    },
     getCols: function(){
         var cols = [];
         for(var j = 0; j < this._storage[0].length; j++){
@@ -279,6 +287,7 @@ function renderProperties(matrix){
     html = displayMessage("Identity", matrix.isIdentity(), html);
     html = displayMessage("Orthogonal", matrix.isOrthogonal(), html);
     html = displayMessage("Symmetric", matrix.isSymmetric(), html);
+    html = displayMessage("Upper Triangular", matrix.isUpperTriangular(), html);
 
     html += "</div>";
     return html;
