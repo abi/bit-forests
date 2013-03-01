@@ -62,6 +62,7 @@ a {
 }
 #editor-box {
   float: left;
+  display: none;
 }
 #editor-box #toolbar {
   margin-bottom: 10px;

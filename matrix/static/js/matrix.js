@@ -147,6 +147,7 @@ Matrix.prototype = {
         }
         return true;
     },
+    // Upper triangular only requires that all the entries below the main diagonal are zero
     isUpperTriangular: function(){
         var isUT = true;
         this.getElementWise(function(i, j, el){
@@ -154,6 +155,14 @@ Matrix.prototype = {
                 isUT = false;
         });
         return isUT;
+    },
+    isLowerTriangular: function(){
+        var isLT = true;
+        this.getElementWise(function(i, j, el){
+            if (j > i && el !== 0)
+                isLT = false;
+        });
+        return isLT;
     },
     getCols: function(){
         var cols = [];
@@ -284,10 +293,15 @@ function renderProperties(matrix){
         return html;
     }
 
-    html = displayMessage("Identity", matrix.isIdentity(), html);
-    html = displayMessage("Orthogonal", matrix.isOrthogonal(), html);
-    html = displayMessage("Symmetric", matrix.isSymmetric(), html);
-    html = displayMessage("Upper Triangular", matrix.isUpperTriangular(), html);
+    props = ["Identity", "Orthogonal", "Symmetric", "UpperTriangular", "LowerTriangular"];
+    for(var i = 0; i < props.length; i++){
+        var isProp = matrix["is" + props[i]]();
+        if(isProp){
+            html = displayMessage(props[i], isProp, html);
+        }else{
+            // Display but hide the container unless the user wants it visible.
+        }
+    }
 
     html += "</div>";
     return html;
