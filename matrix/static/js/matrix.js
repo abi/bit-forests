@@ -104,6 +104,7 @@ Matrix.prototype = {
         // TODO: Using the general formula
     },
     // Properties 
+    // Support Hermitian matrices
     isSymmetric: function(){
         var isSymmetric = true;
         var self = this;
@@ -163,6 +164,14 @@ Matrix.prototype = {
                 isLT = false;
         });
         return isLT;
+    },
+    isDiagonal: function(){
+        var isD = true;
+        this.getElementWise(function(i, j, el){
+            if (j != i && el !== 0)
+                isD = false;
+        });
+        return isD;
     },
     getCols: function(){
         var cols = [];
@@ -293,7 +302,7 @@ function renderProperties(matrix){
         return html;
     }
 
-    props = ["Identity", "Orthogonal", "Symmetric", "UpperTriangular", "LowerTriangular"];
+    props = ["Identity", "Orthogonal", "Symmetric", "UpperTriangular", "LowerTriangular", "Diagonal"];
     for(var i = 0; i < props.length; i++){
         var isProp = matrix["is" + props[i]]();
         if(isProp){
