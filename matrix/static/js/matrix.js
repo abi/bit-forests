@@ -58,6 +58,9 @@ var Utils = {
             sum += v1[i] * v2[i];
         }
         return sum;
+    },
+    norm: function(v){
+        return Math.sqrt(Utils.dot(v, v));
     }
 }
 
@@ -215,10 +218,24 @@ Matrix.prototype = {
             str += "\n";
         }
         return str;
-    },
-    dot: function(){
-
     }
+}
+
+// Gram-Schmidt process that generates an orthonormal basis from a given basis
+// Test: GS([[3, 1], [2, 2]])
+// Have better testing (test that the results are orthonormal)
+// This code could be traced.
+function GS(basis){
+    var orthoBasis = Object.clone(basis, true);
+    var dim = orthoBasis.length;
+    for (var i = 0; i < dim; i++) {
+        var v = orthoBasis[i];
+        v = v / Utils.norm(v);
+        for(var j = i+1; j < dim; j++){
+            orthoBasis[j] -= Utils.dot(orthoBasis[i], orthoBasis[j])
+        }
+    }
+    return orthoBasis;
 }
 
 function matrixParser(str){
