@@ -225,14 +225,21 @@ Matrix.prototype = {
 // Test: GS([[3, 1], [2, 2]])
 // Have better testing (test that the results are orthonormal)
 // This code could be traced.
+// TODO: Vector class
 function GS(basis){
     var orthoBasis = Object.clone(basis, true);
     var dim = orthoBasis.length;
     for (var i = 0; i < dim; i++) {
         var v = orthoBasis[i];
-        v = v / Utils.norm(v);
+        var norm = Utils.norm(v);
+        
+        for(var j = 0; j < v.length; j++)
+            v[j] = v[j] / norm;
+
+        //Utils.dot(orthoBasis[i], orthoBasis[j])
+        // TODO: Create projection operator
         for(var j = i+1; j < dim; j++){
-            orthoBasis[j] -= Utils.dot(orthoBasis[i], orthoBasis[j])
+            //orthoBasis[j] -= 
         }
     }
     return orthoBasis;
