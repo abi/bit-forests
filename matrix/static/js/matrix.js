@@ -226,6 +226,7 @@ Matrix.prototype = {
 // Have better testing (test that the results are orthonormal)
 // This code could be traced.
 // TODO: Vector class
+// This is what it's come down to.
 function GS(basis){
     var orthoBasis = Object.clone(basis, true);
     var dim = orthoBasis.length;
