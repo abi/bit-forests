@@ -176,6 +176,17 @@ Matrix.prototype = {
         });
         return isD;
     },
+    // Many linear algebra algorithms require significantly less computational effort when applied to diagonal matrices,
+    // and this improvement often carries over to tridiagonal matrices as well.
+    isTridiagonal: function(){
+        var isT = true;
+        this.getElementWise(function(i, j, el){
+            if (Math.abs(i-j) > 1 && el !== 0){
+                isT = false;
+            }
+        });
+        return isT;
+    },
     getCols: function(){
         var cols = [];
         for(var j = 0; j < this._storage[0].length; j++){
@@ -327,7 +338,7 @@ function renderProperties(matrix){
         return html;
     }
 
-    props = ["Identity", "Orthogonal", "Symmetric", "UpperTriangular", "LowerTriangular", "Diagonal"];
+    props = ["Identity", "Orthogonal", "Symmetric", "UpperTriangular", "LowerTriangular", "Diagonal", "Tridiagonal"];
     for(var i = 0; i < props.length; i++){
         var isProp = matrix["is" + props[i]]();
         if(isProp){
