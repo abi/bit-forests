@@ -257,6 +257,20 @@ function GS(basis){
     return orthoBasis;
 }
 
+// Gaussian Elimination Algorithm without pivoting
+// LU decomposition
+function gaussianElimination(matrix){
+    var L = new Matrix(matrix.rows, matrix.cols); // TODO: Make this the identity matrix
+    var U  = matrix;
+    for(var i = 0; i < matrix.rows; i++){
+        for(var j = i + 1; j < matrix.rows; j++){
+            L.set(j, i, U.get(j, i) / U.get(i, i)); 
+            //U.set();
+        }
+    }
+    return L;
+}
+
 function matrixParser(str){
     var matrix = [];
     str.split('\n').each(function(line){
