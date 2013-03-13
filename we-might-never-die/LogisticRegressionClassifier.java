@@ -8,9 +8,9 @@ public class LogisticRegressionClassifier {
 	private static int[] yData;
 	private static double[] beta;
 	
-	private static final String DATASET_NAME = "heart";
+	private static final String DATASET_NAME = "vote";
 	private static final int EPOCHS = 10000;
-	private static final double LEARNING_RATE = (double) 0.000088;
+	private static final double LEARNING_RATE = (double) 0.0001;
 	private static boolean IS_LAPLACIAN = true;
 	
 	private static void train() throws IOException{
@@ -46,9 +46,9 @@ public class LogisticRegressionClassifier {
 	    	for(int j = 0; j < nVectors; j++){
 	    		int[] curX = xData[j];
 	    		int curY = yData[j];
-	    		int z = 0;
+	    		double z = 0;
 	    		for(int k = 0; k <= m; k++){
-	    			z += beta[k] * curX[k];
+	    			z += (double) beta[k] * ((double) curX[k]);
 	    		}
 	    		for(int k = 0; k <= m; k++){
 	    			gradient[k] += (double) curX[k] * ((double) curY - (1.0 / (1.0 + Math.exp(-1.0 * (double) z))));
@@ -82,9 +82,9 @@ public class LogisticRegressionClassifier {
 	    	}
 	    	
 	    	
-	    	int z = 0;
+	    	double z = 0;
     		for(int k = 0; k <= m; k++){
-    			z += beta[k] * xVals[k];
+    			z += (double) beta[k] * ((double) xVals[k]);
     		}
     		
 	    	double yProb = (1.0 / (1.0 + Math.exp(-1.0 * (double) z)));
