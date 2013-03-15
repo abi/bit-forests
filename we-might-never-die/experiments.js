@@ -1,8 +1,3 @@
-function greeter(person) {
-    return "Hello, " + person;
-}
-var user = "Test";
-console.log(greeter(user));
 function integrate() {
     var NUM_POINTS = 1000000;
     var numBelowFn = 0;
@@ -16,4 +11,20 @@ function integrate() {
     var fraction = numBelowFn / NUM_POINTS;
     return 2 * Math.exp(2) * fraction;
 }
+function integrateFn(upperLimit, fn) {
+    var NUM_POINTS = 1000000;
+    var numBelowFn = 0;
+    for(var i = 0; i < NUM_POINTS; i++) {
+        var x = Math.random() * upperLimit;
+        var y = Math.random() * fn(upperLimit);
+        if(y < fn(x)) {
+            numBelowFn++;
+        }
+    }
+    var fraction = numBelowFn / NUM_POINTS;
+    return upperLimit * fn(upperLimit) * fraction;
+}
 console.log(integrate());
+console.log(integrateFn(2.0, function (x) {
+    return Math.exp(x);
+}));
