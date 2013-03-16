@@ -28,16 +28,6 @@ console.log(integrate());
 console.log(integrateFn(2.0, function (x) {
     return Math.exp(x);
 }));
-var Bin = (function () {
-    function Bin(n, p) {
-        this.n = n;
-        this.p = p;
-    }
-    Bin.prototype.prob = function (i) {
-        return nCk(this.n, i) * Math.pow(this.p, i) * Math.pow((1 - this.p), (this.n - i));
-    };
-    return Bin;
-})();
 function nCk(n, k) {
     return factorial(n) / (factorial(k) * factorial(n - k));
 }
@@ -48,9 +38,28 @@ function factorial(n) {
         return n * factorial(n - 1);
     }
 }
+var Bin = (function () {
+    function Bin(n, p) {
+        this.n = n;
+        this.p = p;
+    }
+    Bin.prototype.prob = function (i) {
+        return nCk(this.n, i) * Math.pow(this.p, i) * Math.pow((1 - this.p), (this.n - i));
+    };
+    Bin.prototype.exp = function () {
+        return this.n * this.p;
+    };
+    Bin.prototype.var = function () {
+        var n = this.n;
+        var p = this.p;
+        return n * p * (1 - p);
+    };
+    return Bin;
+})();
 var servers = new Bin(100, 0.0038);
 printSep();
 console.log("P(X = 0) = " + servers.prob(0));
+console.log("E[X] = " + servers.exp());
 function printSep() {
     console.log("---------------------------------");
 }

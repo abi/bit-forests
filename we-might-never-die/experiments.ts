@@ -34,13 +34,8 @@ console.log(integrateFn(2.0, function(x){ return Math.exp(x); }));
 // Probability distributions
 // -------------------------
 
-// Binomial distribution
-class Bin {
-    constructor(public n, public p) {}
-    public prob(i : number){
-    	return nCk(this.n, i) * Math.pow(this.p, i) * Math.pow((1 - this.p), (this.n - i));
-    }
-}
+
+// Basic math utilities
 
 // n choose k
 // Why is this the formula for n choose k?
@@ -56,9 +51,30 @@ function factorial(n : number){
 	}
 }
 
+// Binomial distribution
+class Bin {
+    constructor(public n, public p) {}
+    // TODO: Throw errors in case i < 0 or i > n
+    public prob(i : number){
+    	return nCk(this.n, i) * Math.pow(this.p, i) * Math.pow((1 - this.p), (this.n - i));
+    }
+    public exp(){
+    	return this.n * this.p;
+    }
+    public var(){
+    	var n = this.n;
+    	var p = this.p;
+    	return n * p * (1 - p);
+    }
+}
+
+// Poisson distribution
+// TODO: Extract an interface out of Bin that every probability distribution needs to implement
+
 var servers: Bin = new Bin(100, 0.0038);
 printSep();
 console.log("P(X = 0) = " + servers.prob(0));
+console.log("E[X] = " + servers.exp());
 
 function printSep(){
 	console.log("---------------------------------");
