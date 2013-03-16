@@ -66,6 +66,9 @@ class Bin {
     	var p = this.p;
     	return n * p * (1 - p);
     }
+    // FEATURE
+    // Approximate using Normal distrib
+    // Approximate using Poisson distrib
 }
 
 // Poisson distribution
@@ -75,6 +78,9 @@ var servers: Bin = new Bin(100, 0.0038);
 printSep();
 console.log("P(X = 0) = " + servers.prob(0));
 console.log("E[X] = " + servers.exp());
+
+var hashbucket: Bin = new Bin(20000, (1 / 5000));
+console.log("P(X = 0) = " + hashbucket.prob(0));
 
 function printSep(){
 	console.log("---------------------------------");
