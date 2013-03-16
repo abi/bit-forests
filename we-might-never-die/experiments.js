@@ -54,12 +54,15 @@ var Bin = (function () {
         var p = this.p;
         return n * p * (1 - p);
     };
+    Bin.prototype.probPoisson = function (i) {
+    };
     return Bin;
 })();
 var servers = new Bin(100, 0.0038);
 printSep();
 console.log("P(X = 0) = " + servers.prob(0));
 console.log("E[X] = " + servers.exp());
+var hashbucket = new Bin(20000, (1 / 5000));
 function printSep() {
     console.log("---------------------------------");
 }

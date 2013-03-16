@@ -43,6 +43,7 @@ function nCk(n, k){
 	return factorial(n) / (factorial(k) * factorial(n-k));
 }
 
+// RangeError: Maximum call stack size exceeded
 function factorial(n : number){
 	if(n === 0){
 		return 1;
@@ -51,10 +52,19 @@ function factorial(n : number){
 	}
 }
 
+// Some distributions don't have an expecation or variance
+// such as the Cauchy distribution
+interface Distribution{
+	exp(): number;
+	var(): number;
+	prob(i : number): number;
+}
+
 // Binomial distribution
-class Bin {
+class Bin implements Distribution{
     constructor(public n, public p) {}
     // TODO: Throw errors in case i < 0 or i > n
+    // This is what support is
     public prob(i : number){
     	return nCk(this.n, i) * Math.pow(this.p, i) * Math.pow((1 - this.p), (this.n - i));
     }
@@ -66,9 +76,14 @@ class Bin {
     	var p = this.p;
     	return n * p * (1 - p);
     }
-    // FEATURE
+    // Approximate using Poisson distrib 
+    // Only works n is large, p is small and lambda is moderate
+    public probPoisson(i : number){
+
+    }
+
+    // FEATURES
     // Approximate using Normal distrib
-    // Approximate using Poisson distrib
 }
 
 // Poisson distribution
@@ -80,7 +95,7 @@ console.log("P(X = 0) = " + servers.prob(0));
 console.log("E[X] = " + servers.exp());
 
 var hashbucket: Bin = new Bin(20000, (1 / 5000));
-console.log("P(X = 0) = " + hashbucket.prob(0));
+//console.log("P(X = 0) = " + hashbucket.prob(0));
 
 function printSep(){
 	console.log("---------------------------------");
