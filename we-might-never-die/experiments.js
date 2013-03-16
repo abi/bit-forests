@@ -42,8 +42,12 @@ var Bin = (function () {
     function Bin(n, p) {
         this.n = n;
         this.p = p;
+        this.poisson = new Poisson(this.n * this.p);
     }
     Bin.prototype.prob = function (i) {
+        if(i < 0 || i > this.n) {
+            return 0;
+        }
         return nCk(this.n, i) * Math.pow(this.p, i) * Math.pow((1 - this.p), (this.n - i));
     };
     Bin.prototype.exp = function () {
@@ -55,14 +59,32 @@ var Bin = (function () {
         return n * p * (1 - p);
     };
     Bin.prototype.probPoisson = function (i) {
+        return this.poisson.prob(i);
     };
     return Bin;
+})();
+var Poisson = (function () {
+    function Poisson(l) {
+        this.l = l;
+    }
+    Poisson.prototype.prob = function (i) {
+        var l = this.l;
+        return Math.exp(-l) * (Math.pow(l, i) / factorial(i));
+    };
+    Poisson.prototype.exp = function () {
+        return this.l;
+    };
+    Poisson.prototype.var = function () {
+        return this.l;
+    };
+    return Poisson;
 })();
 var servers = new Bin(100, 0.0038);
 printSep();
 console.log("P(X = 0) = " + servers.prob(0));
 console.log("E[X] = " + servers.exp());
 var hashbucket = new Bin(20000, (1 / 5000));
+console.log("P(X = 0) = " + hashbucket.probPoisson(0));
 function printSep() {
     console.log("---------------------------------");
 }

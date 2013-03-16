@@ -62,10 +62,15 @@ interface Distribution{
 
 // Binomial distribution
 class Bin implements Distribution{
-    constructor(public n, public p) {}
-    // TODO: Throw errors in case i < 0 or i > n
-    // This is what support is
+	// TODO: Error check n > 0, 0 <= p <= 1
+	private poisson : Poisson;
+    constructor(public n, public p) {
+    	this.poisson = new Poisson(this.n * this.p);
+    }
+    // TypeScript Q: Why do I have to explicity do this here?
     public prob(i : number){
+    	// Support: [0, 1, ..., n]
+    	if (i < 0 || i > this.n) return 0;
     	return nCk(this.n, i) * Math.pow(this.p, i) * Math.pow((1 - this.p), (this.n - i));
     }
     public exp(){
@@ -79,7 +84,7 @@ class Bin implements Distribution{
     // Approximate using Poisson distrib 
     // Only works n is large, p is small and lambda is moderate
     public probPoisson(i : number){
-
+    	return this.poisson.prob(i);
     }
 
     // FEATURES
@@ -87,7 +92,20 @@ class Bin implements Distribution{
 }
 
 // Poisson distribution
-// TODO: Extract an interface out of Bin that every probability distribution needs to implement
+class Poisson implements Distribution{
+	// Lambda
+	constructor(public l : number) {}
+	public prob(i : number){
+		var l = this.l;
+		return Math.exp(-l) * (Math.pow(l, i) / factorial(i));
+	}
+	public exp(){
+		return this.l;
+	}
+	public var(){
+		return this.l;
+	}
+}
 
 var servers: Bin = new Bin(100, 0.0038);
 printSep();
@@ -95,7 +113,7 @@ console.log("P(X = 0) = " + servers.prob(0));
 console.log("E[X] = " + servers.exp());
 
 var hashbucket: Bin = new Bin(20000, (1 / 5000));
-//console.log("P(X = 0) = " + hashbucket.prob(0));
+console.log("P(X = 0) = " + hashbucket.probPoisson(0));
 
 function printSep(){
 	console.log("---------------------------------");
