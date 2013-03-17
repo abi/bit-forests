@@ -34,6 +34,10 @@ console.log(integrateFn(2.0, function(x){ return Math.exp(x); }));
 // Probability distributions
 // -------------------------
 
+// Misc. utilities
+function printSep(){
+	console.log("---------------------------------");
+}
 
 // Basic math utilities
 
@@ -44,12 +48,23 @@ function nCk(n, k){
 }
 
 // RangeError: Maximum call stack size exceeded
+// TODO: Change to non-recursive factorial to prevent stack overflow
 function factorial(n : number){
 	if(n === 0){
 		return 1;
 	}else{
 		return n * factorial(n-1);
 	}
+}
+
+// var args
+// TODO
+function multinomial(n : number){
+	// Get args
+	var num = factorial(n);
+	var denom = 1;
+	//for(var i = 0; i)
+	return num / denom;
 }
 
 // Some distributions don't have an expecation or variance
@@ -107,6 +122,22 @@ class Poisson implements Distribution{
 	}
 }
 
+// TODO: Different interface for continous distributions
+class Exponential implements Distribution{
+	constructor(public l : number){}
+	public prob(i : number){
+		var l = this.l;
+		return l * Math.exp(-l * i);
+	}
+	public exp(){
+		return 1 / this.l;
+	}
+	public var(){
+		return 1 / (this.l * this.l);
+	}
+}
+
+// Testing distributions
 var servers: Bin = new Bin(100, 0.0038);
 printSep();
 console.log("P(X = 0) = " + servers.prob(0));
@@ -114,7 +145,3 @@ console.log("E[X] = " + servers.exp());
 
 var hashbucket: Bin = new Bin(20000, (1 / 5000));
 console.log("P(X = 0) = " + hashbucket.probPoisson(0));
-
-function printSep(){
-	console.log("---------------------------------");
-}

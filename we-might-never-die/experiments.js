@@ -28,6 +28,9 @@ console.log(integrate());
 console.log(integrateFn(2.0, function (x) {
     return Math.exp(x);
 }));
+function printSep() {
+    console.log("---------------------------------");
+}
 function nCk(n, k) {
     return factorial(n) / (factorial(k) * factorial(n - k));
 }
@@ -37,6 +40,11 @@ function factorial(n) {
     } else {
         return n * factorial(n - 1);
     }
+}
+function multinomial(n) {
+    var num = factorial(n);
+    var denom = 1;
+    return num / denom;
 }
 var Bin = (function () {
     function Bin(n, p) {
@@ -79,12 +87,25 @@ var Poisson = (function () {
     };
     return Poisson;
 })();
+var Exponential = (function () {
+    function Exponential(l) {
+        this.l = l;
+    }
+    Exponential.prototype.prob = function (i) {
+        var l = this.l;
+        return l * Math.exp(-l * i);
+    };
+    Exponential.prototype.exp = function () {
+        return 1 / this.l;
+    };
+    Exponential.prototype.var = function () {
+        return 1 / (this.l * this.l);
+    };
+    return Exponential;
+})();
 var servers = new Bin(100, 0.0038);
 printSep();
 console.log("P(X = 0) = " + servers.prob(0));
 console.log("E[X] = " + servers.exp());
 var hashbucket = new Bin(20000, (1 / 5000));
 console.log("P(X = 0) = " + hashbucket.probPoisson(0));
-function printSep() {
-    console.log("---------------------------------");
-}
