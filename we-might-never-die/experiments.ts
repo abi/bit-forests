@@ -72,11 +72,19 @@ function multinomial(n : number){
 interface Distribution{
 	exp(): number;
 	var(): number;
+}
+
+interface DiscreteDistribution extends Distribution{
 	prob(i : number): number;
 }
 
+interface ContinousDistribution extends Distribution{
+	// P(X <= x)
+	probLT(x : number): number;
+}
+
 // Binomial distribution
-class Bin implements Distribution{
+class Bin implements DiscreteDistribution{
 	// TODO: Error check n > 0, 0 <= p <= 1
 	private poisson : Poisson;
     constructor(public n, public p) {
@@ -107,7 +115,7 @@ class Bin implements Distribution{
 }
 
 // Poisson distribution
-class Poisson implements Distribution{
+class Poisson implements DiscreteDistribution{
 	// Lambda
 	constructor(public l : number) {}
 	public prob(i : number){
@@ -122,18 +130,36 @@ class Poisson implements Distribution{
 	}
 }
 
-// TODO: Different interface for continous distributions
-class Exponential implements Distribution{
+// TEST
+class Exponential implements ContinousDistribution{
 	constructor(public l : number){}
 	public prob(i : number){
 		var l = this.l;
 		return l * Math.exp(-l * i);
+	}
+	public probLT(x : number){
+		return 1 - Math.exp(-this.l * x);
 	}
 	public exp(){
 		return 1 / this.l;
 	}
 	public var(){
 		return 1 / (this.l * this.l);
+	}
+}
+
+// TEST
+class Uniform implements ContinousDistribution{
+	constructor(public alpha : number, public beta : number){}
+	public probLT(x : number){
+		return (x - this.alpha) / (this.beta - this.alpha);
+	}
+	// TODO: Convenience function to find P(a <= x <= b)
+	public exp(){
+		return (this.alpha + this.beta) / 2;
+	}
+	public var(){
+		return Math.pow(this.beta - this.alpha, 2) / 12;
 	}
 }
 

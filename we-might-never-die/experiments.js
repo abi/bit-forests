@@ -95,6 +95,9 @@ var Exponential = (function () {
         var l = this.l;
         return l * Math.exp(-l * i);
     };
+    Exponential.prototype.probLT = function (x) {
+        return 1 - Math.exp(-this.l * x);
+    };
     Exponential.prototype.exp = function () {
         return 1 / this.l;
     };
@@ -102,6 +105,22 @@ var Exponential = (function () {
         return 1 / (this.l * this.l);
     };
     return Exponential;
+})();
+var Uniform = (function () {
+    function Uniform(alpha, beta) {
+        this.alpha = alpha;
+        this.beta = beta;
+    }
+    Uniform.prototype.probLT = function (x) {
+        return (x - this.alpha) / (this.beta - this.alpha);
+    };
+    Uniform.prototype.exp = function () {
+        return (this.alpha + this.beta) / 2;
+    };
+    Uniform.prototype.var = function () {
+        return Math.pow(this.beta - this.alpha, 2) / 12;
+    };
+    return Uniform;
 })();
 var servers = new Bin(100, 0.0038);
 printSep();
