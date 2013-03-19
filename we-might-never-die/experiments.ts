@@ -163,6 +163,19 @@ class Uniform implements ContinousDistribution{
 	}
 }
 
+class Geometric implements DiscreteDistribution{
+	constructor(public p : number){}
+	public prob(k: number){
+		return Math.pow(1-this.p, k - 1) * this.p;
+	}
+	public exp(){
+		return 1 / this.p;
+	}
+	public var(){
+		return (1 - this.p) / Math.pow(this.p, 2);
+	}
+}
+
 // Testing distributions
 var servers: Bin = new Bin(100, 0.0038);
 printSep();

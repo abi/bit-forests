@@ -122,6 +122,21 @@ var Uniform = (function () {
     };
     return Uniform;
 })();
+var Geometric = (function () {
+    function Geometric(p) {
+        this.p = p;
+    }
+    Geometric.prototype.prob = function (k) {
+        return Math.pow(1 - this.p, k - 1) * this.p;
+    };
+    Geometric.prototype.exp = function () {
+        return 1 / this.p;
+    };
+    Geometric.prototype.var = function () {
+        return (1 - this.p) / Math.pow(this.p, 2);
+    };
+    return Geometric;
+})();
 var servers = new Bin(100, 0.0038);
 printSep();
 console.log("P(X = 0) = " + servers.prob(0));
