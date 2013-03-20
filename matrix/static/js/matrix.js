@@ -64,6 +64,33 @@ var Utils = {
     }
 }
 
+function Vector(length, arr){
+    this.length = length;
+    this._storage = [];
+    if(typeof arr !== 'undefined'){
+        if(arr.length != length){
+            throw new Exception();
+        } else{
+            this._storage = arr;
+        }
+    }
+}
+
+Vector.prototype = {
+    get: function(i){
+        return this._storage[i];
+    },
+    set: function(i, val){
+        this._storage[i] = val;
+    },
+    setVector: function(arr){
+        if(arr.length != this.length){
+            throw new Exception();
+        }
+        this._storage = arr;
+    }
+}
+
 function Matrix(rows, cols){
     if(typeof rows === "undefined")
         rows = 0;

@@ -172,7 +172,7 @@ class Geometric implements DiscreteDistribution{
 		return 1 / this.p;
 	}
 	public var(){
-		return (1 - this.p) / Math.pow(this.p, 2);
+		return (1 - this.p) / Math.pow(this. p, 2);
 	}
 }
 
