@@ -88,6 +88,20 @@ Vector.prototype = {
             throw new Exception();
         }
         this._storage = arr;
+    },
+    dot: function(toDot){
+        if(toDot.length !== this.length){
+            throw new Exception();
+        }
+        
+        var sum = 0;
+        for(var i = 0; i < v1.length; i++){
+            sum += this._storage[i] * toDot.get(i);
+        }
+        return sum;
+    },
+    norm: function(v){
+        return Math.sqrt(this.dot(this));
     }
 }
 
