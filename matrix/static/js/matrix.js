@@ -47,23 +47,6 @@ function renderApp(){
     }
 }
 
-var Utils = {
-    dot: function(v1, v2){
-        if(v1.length !== v2.length){
-            return;
-        }
-        
-        var sum = 0;
-        for(var i = 0; i < v1.length; i++){
-            sum += v1[i] * v2[i];
-        }
-        return sum;
-    },
-    norm: function(v){
-        return Math.sqrt(Utils.dot(v, v));
-    }
-}
-
 function Vector(length, arr){
     this.length = length;
     this._storage = [];
