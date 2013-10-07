@@ -1,4 +1,4 @@
-var a = 4;
+var a = 2;
 a = 6;
 a += 2;
 a = (function(){ return 8; })()

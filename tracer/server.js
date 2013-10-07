@@ -7,11 +7,11 @@ var esprima = require('esprima')
 var estraverse = require('estraverse')
 var escodegen = require('escodegen')
 
-server.listen(3001);
+server.listen(3001)
 
-app.get('/', function(req, res){
-    res.end(fs.readFileSync('tracer.html', 'utf8'));
-});
+app.get('/', function (req, res){
+    res.end(fs.readFileSync('tracer.html', 'utf8'))
+})
 
 // Source code transformations
 
@@ -136,20 +136,20 @@ function esprimaTransform (src) {
 
 // File watching
 
-var FILE = 'source.js';
+var FILE = 'source.js'
 
-fs.watch(FILE, {}, function(event, filename){
+fs.watch(FILE, {}, function (event, filename) {
     // TODO: Fix filename issue
-    msg = refresh(filename);
+    msg = refresh(filename)
     for(var i = 0; i < sockets.length; i++){
-        sockets[i].emit('update', msg);
+        sockets[i].emit('update', msg)
     }
-});
+})
 
-function refresh(filename){
-    var contents =  fs.readFileSync(FILE, 'utf8');
-    var msg = {'source': contents, 'transformed': esprimaTransform(contents)};
-    return msg;
+function refresh (filename) {
+    var contents =  fs.readFileSync(FILE, 'utf8')
+    var msg = {'source': contents, 'transformed': esprimaTransform(contents)}
+    return msg
 }
 
 // Sockets
@@ -157,8 +157,8 @@ function refresh(filename){
 var sockets = []
 
 io.sockets.on('connection', function (socket) {
-  socket.emit('update', refresh(FILE));
-  sockets.push(socket);
-});
+  socket.emit('update', refresh(FILE))
+  sockets.push(socket)
+})
 
-app.use(express.static(__dirname + '/static'));
+app.use(express.static(__dirname + '/static'))
