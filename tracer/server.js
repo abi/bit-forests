@@ -10,8 +10,18 @@ var escodegen = require('escodegen')
 server.listen(3001)
 
 app.get('/', function (req, res){
-    res.end(fs.readFileSync('tracer.html', 'utf8'))
+    res.end(fs.readFileSync('static/html/tracer.html', 'utf8'))
 })
+
+// Debugging
+
+function debug (log) {
+  console.log(log)
+}
+
+function debugObj (obj) {
+  debug(JSON.stringify(obj, null, 1))
+}
 
 // Source code transformations
 
@@ -31,78 +41,58 @@ Tracer.prototype.insertAfter_ = function (ast, node, contents) {
   })
 }
 
-function esprimaTransform (src) {
+Tracer.prototype.generateTrace_ = function (identifier, line) {
+  var self = this
+
+  var args = [
+    '"' + identifier + '"',
+    identifier,
+    line
+  ]
+  return self.generateAST_("tracer.trace(" + args.join(',') + ")")
+}
+
+Tracer.prototype.transform = function (src) {
+  var self = this
 
   var ast = esprima.parse(src, {loc: true})
-  console.log(JSON.stringify(ast, null, 1))
+  debug(ast)
 
   estraverse.traverse(ast, {
-    enter: function(node, parent) {},
     leave: function(node, parent) {
 
       // TODO:
       // Handle declartions within for loops
       // Handle function calls
 
-      if (node.type === 'VariableDeclaration' && parent.type !== 'ForStatement') {
+      if (node.type === 'VariableDeclaration' &&
+          parent.type !== 'ForStatement') {
         node.declarations.forEach(function (decl) {
-
-          // Generate a trace call
-          var funcCall = esprima
-              .parse("trace('" + decl.id.name + "', " + decl.id.name + ", " + decl.loc.start.line + ")")
-              .body[0]
-
           // NOTE: In a variable declaration block that has multiple declaration statements
           // the order of the traces is reversed.
           // e.g.
           // var a = 5, b = 6
           // trace('b', ...)
           // trace('a', ...)
-          parent.body.forEach(function (n, i) {
-            if (n === node) {
-              parent.body.splice(i + 1, 0, funcCall)
-            }
-          })
-
+          var traceSrc = self.generateTrace_(decl.id.name, decl.loc.start.line)
+          self.insertAfter_(parent, node, traceSrc)
         })
       } else if (node.type === 'ExpressionStatement' &&
                  node.expression.type === 'AssignmentExpression' &&
                  ['=', '+=', '-=', '*='].indexOf(node.expression.operator) !== -1) {
         // THINK: Check the list of operators possible here is exhaustive
         // THINK: Ensure that node.expression.left.type === 'Identifier'
-        //
         var identifier = node.expression.left
-
-        // Generate a trace call
-        var funcCall = esprima
-            .parse("trace('" + identifier.name + "', " + identifier.name + ", " + identifier.loc.start.line + ")")
-            .body[0]
-
-        // Add trace to AST
-        parent.body.forEach(function (n, i) {
-          if (n === node) {
-            parent.body.splice(i + 1, 0, funcCall)
-          }
-        })
+        var traceSrc = self.generateTrace_(identifier.name, identifier.loc.start.line)
+        self.insertAfter_(parent, node, traceSrc)
 
       } else if (node.type === 'ExpressionStatement' &&
                  node.expression.type === 'UpdateExpression') {
         // THINK: Need to check operators?
-
-        // Generate a trace call
         var identifier = node.expression.argument
+        var traceSrc = self.generateTrace_(identifier.name, identifier.loc.start.line)
+        self.insertAfter_(parent, node, traceSrc)
 
-        // TODO: Abstract out
-        var funcCall = esprima
-            .parse("trace('" + identifier.name + "', " + identifier.name + ", " + identifier.loc.start.line + ")")
-            .body[0]
-
-        // Add trace to AST
-        parent.body.forEach(function (n, i) {
-          if (n === node) {
-            parent.body.splice(i + 1, 0, funcCall)
-          }
-        })
       } else if (node.type === 'ExpressionStatement' &&
                  node.expression.type === 'CallExpression') {
         // THINK: node.expression.callee.computed,
@@ -112,7 +102,7 @@ function esprimaTransform (src) {
         var method = node.expression.callee.property
 
         var funcCall = esprima
-            .parse("traceCall('" + callee.name + "', " +
+            .parse("tracer.traceCall('" + callee.name + "', " +
                               callee.name + ", " +
                               "'" + method.name + "', " +
                               callee.loc.start.line + ")")
@@ -130,13 +120,13 @@ function esprimaTransform (src) {
   })
 
   var transformedSrc = escodegen.generate(ast)
-  console.log(transformedSrc)
+  debug(transformedSrc)
   return transformedSrc
 }
 
 // File watching
 
-var FILE = 'source.js'
+var FILE = 'test/simple.js'
 
 fs.watch(FILE, {}, function (event, filename) {
     // TODO: Fix filename issue
@@ -148,7 +138,8 @@ fs.watch(FILE, {}, function (event, filename) {
 
 function refresh (filename) {
     var contents =  fs.readFileSync(FILE, 'utf8')
-    var msg = {'source': contents, 'transformed': esprimaTransform(contents)}
+    var tracer = new Tracer()
+    var msg = {'source': contents, 'transformed': tracer.transform(contents)}
     return msg
 }
 

@@ -1,38 +1,48 @@
 $(document).ready(function () {
+
+  var tracer = window.tracer = new Tracer()
+
   var socket = io.connect('http://localhost')
   socket.on('update', function (data) {
     $('#source').html(data['source'].replace(/\n/gi, '<br/>'))
     eval(data['transformed'])
-    $('#trace').html(renderTrace())
+    $('#trace').html(tracer.render())
   })
 })
 
+function Tracer () {
+  var self = this
+  self.lineTraces = {}
+}
 
-var traces = {}
-
-function getType (obj) {
+Tracer.prototype.getType_ = function (obj) {
   return Object.prototype.toString.call(obj).slice(8, -1)
 }
 
-function trace (name, value, line) {
-  if (!Object.has(traces, line)) {
-    traces[line] = []
+Tracer.prototype.trace = function (name, value, line) {
+  var self = this
+
+  if (!Object.has(self.lineTraces, line)) {
+    self.lineTraces[line] = []
   }
 
   // Note: JSON.stringify makes the value human-readable
-  traces[line].push({
+  self.lineTraces[line].push({
     'name' : name,
     'value' : JSON.stringify(value),
     'line' : line
   })
 }
 
-function traceCall (name, obj, method, line) {
-  if (!Object.has(traces, line)) {
-    traces[line] = []
+Tracer.prototype.traceCall = function (name, obj, method, line) {
+  var self = this
+
+  if (!Object.has(self.lineTraces, line)) {
+    self.lineTraces[line] = []
   }
-  if (getType(obj) === 'Array') {
-    traces[line].push({
+
+  if (self.getType_(obj) === 'Array') {
+    self.lineTraces[line].push({
       'name' : name,
       'value' : JSON.stringify(obj),
       'line' : line
@@ -40,10 +50,11 @@ function traceCall (name, obj, method, line) {
   }
 }
 
-function renderTrace () {
+Tracer.prototype.render = function () {
+  var self = this
 
   // Convert all keys to ints
-  var lines = Object.keys(traces).map(function (i) {
+  var lines = Object.keys(self.lineTraces).map(function (i) {
     return parseInt(i)
   }).sortBy()
 
@@ -51,7 +62,7 @@ function renderTrace () {
   var prevLine = 0
   for (var i = 0; i < lines.length; i++) {
     var line = lines[i]
-    var traceList = traces[line]
+    var traceList = self.lineTraces[line]
 
     var linesSkipped = parseInt(line) - prevLine
 
