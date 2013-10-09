@@ -56,7 +56,7 @@ Tracer.prototype.transform = function (src) {
   var self = this
 
   var ast = esprima.parse(src, {loc: true})
-  debug(ast)
+  debugObj(ast)
 
   estraverse.traverse(ast, {
     leave: function(node, parent) {
@@ -64,7 +64,6 @@ Tracer.prototype.transform = function (src) {
       // TODO:
       // Handle declartions within for loops
       // Handle function calls
-
       if (node.type === 'VariableDeclaration' &&
           parent.type !== 'ForStatement') {
         node.declarations.forEach(function (decl) {
@@ -120,7 +119,7 @@ Tracer.prototype.transform = function (src) {
   })
 
   var transformedSrc = escodegen.generate(ast)
-  debug(transformedSrc)
+  debugObj(transformedSrc)
   return transformedSrc
 }
 
